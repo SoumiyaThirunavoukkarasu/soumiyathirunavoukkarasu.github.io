@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Soumiya Thirunavoukkarasu — Cybersecurity Engineer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #080c0a; --bg2: #0d1410; --bg3: #111a14;
+      --green: #00ff6a; --green-glow: rgba(0,255,106,0.15); --green-faint: rgba(0,255,106,0.06);
+      --text: #d4ead9; --muted: #5a7a62; --border: rgba(0,255,106,0.12);
+      --mono: 'Share Tech Mono', monospace; --sans: 'Syne', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.4;
+    }
+
+    /* LANG */
+    .lang-toggle { display: flex; gap: 0.4rem; }
+    .lang-btn { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; padding: 0.3rem 0.7rem; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; border-radius: 2px; transition: all 0.2s; }
+    .lang-btn.active { background: var(--green); color: #080c0a; border-color: var(--green); font-weight: 700; }
+    [data-lang] { display: none; }
+    body.lang-en [data-lang="en"] { display: inline; }
+    body.lang-fr [data-lang="fr"] { display: inline; }
+    [data-lang-block] { display: none; }
+    body.lang-en [data-lang-block="en"] { display: block; }
+    body.lang-fr [data-lang-block="fr"] { display: block; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 4rem; background: rgba(8,12,10,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-logo { font-family: var(--mono); color: var(--green); font-size: 0.9rem; letter-spacing: 0.1em; }
+    .nav-right { display: flex; align-items: center; gap: 2rem; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--green); }
+
+    /* HERO */
+    #hero { min-height: 100vh; display: flex; align-items: center; padding: 8rem 4rem 4rem; position: relative; overflow: hidden; }
+    .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%); pointer-events: none; }
+    .hero-glow { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(0,255,106,0.08) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+    #hero::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,106,0.01) 2px, rgba(0,255,106,0.01) 4px); pointer-events: none; }
+    .hero-content { position: relative; max-width: 780px; }
+    .hero-tag { font-family: var(--mono); font-size: 0.78rem; color: var(--green); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s 0.2s forwards; }
+    .hero-name { font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.02em; margin-bottom: 1rem; opacity: 0; animation: fadeUp 0.6s 0.35s forwards; }
+    .hero-name span { color: var(--green); }
+    .hero-title { font-family: var(--mono); font-size: clamp(0.9rem, 2vw, 1.2rem); color: var(--muted); margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.6s 0.5s forwards; }
+    .hero-bio { max-width: 560px; line-height: 1.7; color: #7fa886; font-size: 1.05rem; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.6s 0.65s forwards; }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s 0.8s forwards; }
+    .btn { padding: 0.85rem 2rem; font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; border-radius: 3px; transition: all 0.25s; cursor: pointer; border: none; display: inline-block; }
+    .btn-primary { background: var(--green); color: #080c0a; font-weight: 700; }
+    .btn-primary:hover { background: #fff; box-shadow: 0 0 30px rgba(0,255,106,0.4); }
+    .btn-outline { background: transparent; color: var(--green); border: 1px solid var(--green); }
+    .btn-outline:hover { background: var(--green-glow); }
+
+    /* SECTIONS */
+    section { padding: 6rem 4rem; position: relative; }
+    .section-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3.5rem; }
+    .section-num { font-family: var(--mono); font-size: 0.75rem; color: var(--green); letter-spacing: 0.15em; }
+    .section-title { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+    .section-line { flex: 1; height: 1px; background: var(--border); max-width: 300px; }
+
+    /* ABOUT */
+    #about { background: var(--bg2); }
+    .about-grid { display: grid; grid-template-columns: auto 1fr; gap: 4rem; align-items: start; }
+    .about-photo-wrap { position: relative; }
+    .about-photo { width: 260px; height: 260px; border: 3px solid var(--green); overflow: hidden; box-shadow: 0 0 30px rgba(0,255,106,0.2); flex-shrink: 0; }
+    .about-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+    .about-photo-wrap::before { content: ''; position: absolute; width: 260px; height: 260px; border: 1px solid var(--border); top: 12px; left: 12px; z-index: -1; }
+    .about-text h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 1.2rem; color: var(--green); }
+    .about-text p { line-height: 1.8; color: #7fa886; margin-bottom: 1.5rem; }
+    .about-details { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+    .detail-item { border-left: 2px solid var(--green); padding-left: 1rem; }
+    .detail-label { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+    .detail-value { font-size: 0.95rem; font-weight: 600; margin-top: 0.2rem; }
+
+    /* SKILLS */
+    #skills { background: var(--bg); }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .skill-card { background: var(--bg2); border: 1px solid var(--border); padding: 1.8rem; transition: border-color 0.3s, box-shadow 0.3s; }
+    .skill-card:hover { border-color: rgba(0,255,106,0.4); box-shadow: 0 0 20px var(--green-faint); }
+    .skill-card-title { font-family: var(--mono); font-size: 0.75rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1rem; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag { background: var(--green-faint); border: 1px solid var(--border); color: var(--text); font-family: var(--mono); font-size: 0.72rem; padding: 0.3rem 0.75rem; border-radius: 2px; }
+
+    /* PROJECTS */
+    #projects { background: var(--bg2); }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+    .project-card { background: var(--bg); border: 1px solid var(--border); padding: 2rem; transition: border-color 0.3s, transform 0.3s; }
+    .project-card:hover { border-color: rgba(0,255,106,0.4); transform: translateY(-4px); }
+    .project-badge { font-family: var(--mono); font-size: 0.68rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.8rem; }
+    .project-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .project-desc { color: #7fa886; font-size: 0.9rem; line-height: 1.7; margin-bottom: 1.2rem; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+    .project-link { font-family: var(--mono); font-size: 0.72rem; color: var(--green); text-decoration: none; letter-spacing: 0.1em; border-bottom: 1px solid var(--border); padding-bottom: 2px; transition: border-color 0.2s; }
+    .project-link:hover { border-color: var(--green); }
+
+    /* EXPERIENCE */
+    #experience { background: var(--bg); }
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--border); }
+    .timeline-item { position: relative; padding: 0 0 3rem 2.5rem; }
+    .timeline-item::before { content: ''; position: absolute; left: -2rem; top: 0.4rem; width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 10px var(--green); transform: translateX(-3.5px); }
+    .timeline-date { font-family: var(--mono); font-size: 0.72rem; color: var(--green); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .timeline-role { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .timeline-company { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); margin-bottom: 1rem; }
+    .timeline-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .timeline-list li { color: #7fa886; font-size: 0.95rem; line-height: 1.6; padding-left: 1.2rem; position: relative; }
+    .timeline-list li::before { content: '▸'; position: absolute; left: 0; color: var(--green); font-size: 0.7rem; top: 0.2rem; }
+
+    /* CERTIFICATIONS */
+    #certifications { background: var(--bg2); }
+    .cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+    .cert-card { background: var(--bg); border: 1px solid var(--border); padding: 2rem; display: flex; align-items: flex-start; gap: 1.2rem; transition: border-color 0.3s, transform 0.3s; }
+    .cert-card:hover { border-color: rgba(0,255,106,0.5); transform: translateY(-4px); }
+    .cert-icon { font-size: 2rem; flex-shrink: 0; }
+    .cert-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
+    .cert-issuer { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
+
+    /* CONTACT */
+    #contact { background: var(--bg); text-align: center; }
+    .contact-inner { max-width: 600px; margin: 0 auto; }
+    .contact-inner p { color: var(--muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 3rem; }
+    .contact-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 2rem; }
+    .contact-link { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.1em; padding: 0.8rem 1.5rem; border: 1px solid var(--border); transition: all 0.25s; }
+    .contact-link:hover { color: var(--green); border-color: var(--green); background: var(--green-faint); }
+
+    footer { padding: 2rem 4rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+      #hero { padding: 6rem 1.5rem 4rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-photo { width: 200px; height: 200px; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body class="lang-en">
+
+  <nav>
+    <div class="nav-logo">ST // CYBER</div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#about"><span data-lang="en">About</span><span data-lang="fr">À propos</span></a></li>
+        <li><a href="#skills"><span data-lang="en">Skills</span><span data-lang="fr">Compétences</span></a></li>
+        <li><a href="#projects"><span data-lang="en">Projects</span><span data-lang="fr">Projets</span></a></li>
+        <li><a href="#experience"><span data-lang="en">Experience</span><span data-lang="fr">Expérience</span></a></li>
+        <li><a href="#certifications"><span data-lang="en">Certs</span><span data-lang="fr">Certifs</span></a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('fr')">FR</button>
+      </div>
+    </div>
+  </nav>
+
+  <section id="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <p class="hero-tag">
+        <span data-lang="en">// Available for new opportunities</span>
+        <span data-lang="fr">// Disponible pour de nouvelles opportunités</span>
+      </p>
+      <h1 class="hero-name">Soumiya<br/><span>Thirunavoukkarasu</span></h1>
+      <p class="hero-title">
+        <span data-lang="en">Cybersecurity Engineer — Penetration Testing & AppSec</span>
+        <span data-lang="fr">Ingénieure en Cybersécurité — Tests d'intrusion & Sécurité Applicative</span>
+      </p>
+      <p class="hero-bio">
+        <span data-lang="en">Master's graduate in Computer Science specialised in Cybersecurity. Passionate about network security, penetration testing, and building robust defences for web applications.</span>
+        <span data-lang="fr">Diplômée d'un Master en Informatique spécialisée en Cybersécurité. Passionnée par la sécurité des réseaux, les tests d'intrusion et la protection des applications web.</span>
+      </p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn btn-primary">
+          <span data-lang="en">View Projects</span>
+          <span data-lang="fr">Voir les projets</span>
+        </a>
+        <a href="#contact" class="btn btn-outline">Contact</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="section-header reveal">
+      <span class="section-num">01.</span>
+      <h2 class="section-title"><span data-lang="en">About Me</span><span data-lang="fr">À propos</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-photo-wrap reveal">
+        <div class="about-photo">
+          <img src="soumiyapic.jpeg" alt="Soumiya Thirunavoukkarasu" />
+        </div>
+      </div>
+      <div class="about-text reveal">
+        <h3>Ingénieure en Cybersécurité</h3>
+        <p data-lang-block="en">Graduate of a Master's in Computer Science, specialised in Cybersecurity from EPITA Paris. Passionate about network security, application security, and the ever-evolving challenges of protecting digital infrastructure. My experience as an Application Security Engineer has allowed me to develop hands-on skills in penetration testing and secure development, with a rigorous and methodical approach.</p>
+        <p data-lang-block="fr">Diplômée d'un Master en Informatique, spécialisée en Cybersécurité à l'EPITA Paris. Passionnée par les défis liés à la sécurité des réseaux et des systèmes informatiques. Mon expérience en tant qu'Ingénieure Sécurité des Applications m'a permis de développer des compétences pratiques dans les tests d'intrusion et la sécurité applicative, avec une approche rigoureuse et méthodique.</p>
+        <div class="about-details">
+          <div class="detail-item">
+            <div class="detail-label"><span data-lang="en">Location</span><span data-lang="fr">Localisation</span></div>
+            <div class="detail-value">Évry-Courcouronnes, France</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label"><span data-lang="en">Education</span><span data-lang="fr">Formation</span></div>
+            <div class="detail-value">MSc Cybersecurity — EPITA</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label"><span data-lang="en">Languages</span><span data-lang="fr">Langues</span></div>
+            <div class="detail-value">EN · FR · HI · TA</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label"><span data-lang="en">Mobility</span><span data-lang="fr">Mobilité</span></div>
+            <div class="detail-value"><span data-lang="en">All of France</span><span data-lang="fr">France entière</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="section-header reveal">
+      <span class="section-num">02.</span>
+      <h2 class="section-title"><span data-lang="en">Technical Skills</span><span data-lang="fr">Compétences Techniques</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-card-title"><span data-lang="en">Penetration Testing</span><span data-lang="fr">Tests d'intrusion</span></div>
+        <div class="skill-tags"><span class="tag">Kali Linux</span><span class="tag">Metasploit</span><span class="tag">Burp Suite</span><span class="tag">Nessus</span></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title"><span data-lang="en">Vulnerability Analysis</span><span data-lang="fr">Analyse de vulnérabilités</span></div>
+        <div class="skill-tags"><span class="tag">CVE</span><span class="tag">CVSS</span><span class="tag">STRIDE</span><span class="tag">OWASP Top 10</span></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title"><span data-lang="en">Network Security</span><span data-lang="fr">Sécurité des réseaux</span></div>
+        <div class="skill-tags"><span class="tag">Wireshark</span><span class="tag">Nmap</span><span class="tag">Firewalls</span><span class="tag">VPN</span><span class="tag">IDS/IPS</span></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title"><span data-lang="en">Identity & Access</span><span data-lang="fr">Gestion des identités</span></div>
+        <div class="skill-tags"><span class="tag">OAuth</span><span class="tag">OpenID</span><span class="tag">SAML</span></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title"><span data-lang="en">Programming</span><span data-lang="fr">Programmation</span></div>
+        <div class="skill-tags"><span class="tag">Python</span><span class="tag">Java</span><span class="tag">PostgreSQL</span><span class="tag">Unix</span></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title"><span data-lang="en">Cryptography</span><span data-lang="fr">Cryptographie</span></div>
+        <div class="skill-tags"><span class="tag">PKI</span><span class="tag">TLS/SSL</span><span class="tag">Digital Certs</span><span class="tag">Asymmetric Enc.</span></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title"><span data-lang="en">Networks & Telecom</span><span data-lang="fr">Réseaux & Télécoms</span></div>
+        <div class="skill-tags"><span class="tag">TCP/IP</span><span class="tag">VLAN</span><span class="tag">IPv4/IPv6</span><span class="tag">NAT</span><span class="tag">DNS</span><span class="tag">DHCP</span></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title"><span data-lang="en">SOC & Operations</span><span data-lang="fr">SOC & Sécurité Opérationnelle</span></div>
+        <div class="skill-tags"><span class="tag">Log Analysis</span><span class="tag">Splunk</span><span class="tag">ELK Stack</span><span class="tag">Incident Response</span></div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title">DevSecOps</div>
+        <div class="skill-tags"><span class="tag">GitLab</span><span class="tag">Jenkins</span><span class="tag">SonarQube</span><span class="tag">Snyk</span><span class="tag">OWASP ZAP</span><span class="tag">Dependency Track</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="section-header reveal">
+      <span class="section-num">03.</span>
+      <h2 class="section-title"><span data-lang="en">Projects</span><span data-lang="fr">Projets</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-badge">VulnHub · CTF</div>
+        <div class="project-title">Corrosion 2</div>
+        <p class="project-desc" data-lang-block="en">Full penetration test on the VulnHub machine Corrosion 2. Performed enumeration, privilege escalation, and gained root access by exploiting misconfigured services.</p>
+        <p class="project-desc" data-lang-block="fr">Test d'intrusion complet sur la machine VulnHub Corrosion 2. Énumération des services, escalade de privilèges et accès root obtenu en exploitant des configurations défaillantes.</p>
+        <div class="project-tags">
+          <span class="tag">Kali Linux</span><span class="tag">Nmap</span><span class="tag">Privilege Escalation</span><span class="tag">Enumeration</span>
+        </div>
+        <a href="https://www.vulnhub.com/entry/corrosion-2,745/" target="_blank" class="project-link">
+          <span data-lang="en">↗ View on VulnHub</span><span data-lang="fr">↗ Voir sur VulnHub</span>
+        </a>
+      </div>
+      <div class="project-card reveal" style="border-style: dashed; opacity: 0.75;">
+        <div class="project-badge">TryHackMe · Profile</div>
+        <div class="project-title">
+          <span data-lang="en">Ongoing CTF Practice</span>
+          <span data-lang="fr">Pratique CTF en cours</span>
+        </div>
+        <p class="project-desc" data-lang-block="en">Active profile on TryHackMe — completing rooms focused on penetration testing, web exploitation, and network security. Certified Junior Penetration Tester.</p>
+        <p class="project-desc" data-lang-block="fr">Profil actif sur TryHackMe — résolution de challenges axés sur les tests d'intrusion, l'exploitation web et la sécurité réseau. Certifiée Junior Penetration Tester.</p>
+        <div class="project-tags">
+          <span class="tag">Web Exploitation</span><span class="tag">Network Security</span><span class="tag">Linux</span>
+        </div>
+        <a href="https://tryhackme.com/p/Soumiya" target="_blank" class="project-link">↗ TryHackMe Profile</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="section-header reveal">
+      <span class="section-num">04.</span>
+      <h2 class="section-title"><span data-lang="en">Experience</span><span data-lang="fr">Expériences</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-date">Nov 2022 — Mai 2023</div>
+        <div class="timeline-role"><span data-lang="en">Application Security Intern</span><span data-lang="fr">Stagiaire Sécurité Applicative</span></div>
+        <div class="timeline-company">Duck Creek Technologies — Paris</div>
+        <ul class="timeline-list">
+          <li><span data-lang="en">Conducted penetration tests on web applications</span><span data-lang="fr">Réalisation de tests d'intrusion sur applications web</span></li>
+          <li><span data-lang="en">Documented vulnerabilities and coordinated remediation with DevOps teams</span><span data-lang="fr">Documentation des vulnérabilités et coordination avec les équipes DevOps</span></li>
+          <li><span data-lang="en">Managed security tickets to protect sensitive data</span><span data-lang="fr">Gestion des tickets de sécurité pour la protection d'informations sensibles</span></li>
+          <li><span data-lang="en">Tools: GitLab, Jenkins, SonarQube/Snyk, OWASP ZAP, Dependency Track, Burp Suite</span><span data-lang="fr">Outils : GitLab, Jenkins, SonarQube/Snyk, OWASP ZAP, Dependency Track, Burp Suite</span></li>
+        </ul>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-date">Jul 2018 — Jan 2019</div>
+        <div class="timeline-role"><span data-lang="en">Ethical Hacker Intern</span><span data-lang="fr">Ethical Hacker (Stage)</span></div>
+        <div class="timeline-company">Dynamic Networking Institute — Inde</div>
+        <ul class="timeline-list">
+          <li><span data-lang="en">Network monitoring via Wireshark</span><span data-lang="fr">Surveillance réseau via Wireshark</span></li>
+          <li><span data-lang="en">Vulnerability scanning with Nmap</span><span data-lang="fr">Scans de vulnérabilités avec Nmap</span></li>
+          <li><span data-lang="en">Controlled exploitation using Metasploit</span><span data-lang="fr">Exploitation contrôlée avec Metasploit</span></li>
+        </ul>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-date">2023 – 2024</div>
+        <div class="timeline-role"><span data-lang="en">Volunteer — Cybersecurity Events</span><span data-lang="fr">Bénévole — Événements Cybersécurité</span></div>
+        <div class="timeline-company">Paris Cyber Summit · Viva Technology</div>
+        <ul class="timeline-list">
+          <li><span data-lang="en">Logistical support at cybersecurity conferences — Paris Cyber Summit (June 2024)</span><span data-lang="fr">Support logistique aux conférences en cybersécurité — Paris Cyber Summit (juin 2024)</span></li>
+          <li><span data-lang="en">Event organisation and visitor management at tech stands — Viva Technology (June 2023)</span><span data-lang="fr">Organisation et gestion des flux visiteurs aux stands technologiques — Viva Technology (juin 2023)</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="certifications">
+    <div class="section-header reveal">
+      <span class="section-num">05.</span>
+      <h2 class="section-title"><span data-lang="en">Certifications</span><span data-lang="fr">Certifications</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="cert-grid">
+      <div class="cert-card reveal">
+        <div class="cert-icon">🌐</div>
+        <div>
+          <div class="cert-name">CCNA</div>
+          <div class="cert-issuer">Cisco</div>
+        </div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">🎓</div>
+        <div>
+          <div class="cert-name">MSc <span data-lang="en">Computer Science — Cybersecurity</span><span data-lang="fr">Informatique — Cybersécurité</span></div>
+          <div class="cert-issuer">EPITA Paris · 2021–2023</div>
+        </div>
+      </div>
+      <div class="cert-card reveal" style="border-style: dashed; opacity: 0.75;">
+        <div class="cert-icon">⏳</div>
+        <div>
+          <div class="cert-name">CompTIA Security+ <span style="font-size:0.75rem;color:var(--green);">— <span data-lang="en">in progress</span><span data-lang="fr">en cours</span></span></div>
+          <div class="cert-issuer"><span data-lang="en">Network security · Risk management · Cryptography</span><span data-lang="fr">Sécurité réseau · Gestion des risques · Cryptographie</span></div>
+        </div>
+      </div>
+      <div class="cert-card reveal" style="border-style: dashed; opacity: 0.75;">
+        <div class="cert-icon">⏳</div>
+        <div>
+          <div class="cert-name">OSCP <span style="font-size:0.75rem;color:var(--green);">— <span data-lang="en">in progress</span><span data-lang="fr">en cours</span></span></div>
+          <div class="cert-issuer"><span data-lang="en">Pentest labs · Nmap · Burp Suite</span><span data-lang="fr">Labs pentest · Nmap · Burp Suite</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="section-header reveal" style="justify-content:center;text-align:center;flex-direction:column;gap:0.8rem;">
+      <span class="section-num">06.</span>
+      <h2 class="section-title"><span data-lang="en">Get In Touch</span><span data-lang="fr">Me Contacter</span></h2>
+    </div>
+    <div class="contact-inner reveal">
+      <p data-lang-block="en">I'm currently open to new opportunities in cybersecurity — penetration testing, AppSec, or SOC roles. Feel free to reach out!</p>
+      <p data-lang-block="fr">Je suis disponible pour de nouvelles opportunités en cybersécurité — tests d'intrusion, sécurité applicative ou rôles SOC. N'hésitez pas à me contacter !</p>
+      <a href="mailto:soumiyathiruna@gmail.com" class="btn btn-primary">soumiyathiruna@gmail.com</a>
+      <div class="contact-links">
+        <a href="https://linkedin.com/in/SoumiyaThiruna" target="_blank" class="contact-link">⟶ LinkedIn</a>
+        <a href="https://tryhackme.com/p/Soumiya" target="_blank" class="contact-link">⟶ TryHackMe</a>
+        <a href="tel:0769656834" class="contact-link">⟶ +33 07 69 65 68 34</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Soumiya Thirunavoukkarasu</p>
+    <p>HTML · CSS · GitHub Pages</p>
+  </footer>
+
+  <script>
+    function setLang(lang) {
+      document.body.className = 'lang-' + lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
+      });
+    }
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+  </script>
+</body>
+</html>
